@@ -2,6 +2,7 @@
     margin: 0; 
     padding: 0;
     box-sizing: border-box; 
+    font-family: 'Roboto', sans-serif;
 }
 
 body {
@@ -11,13 +12,40 @@ body {
     flex-direction: column;
     
 }
+.container {
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    flex-direction: column;
+    margin: 30px;
+
+}
 
 #board {
+    padding-top: 30px;
     display:flex;
-    flex-wrap: wrap;
+    width: 450px; 
+    flex-wrap: wrap; 
 }
 
 button {
    margin: 20px;
 
+}
+
+.cell {
+    height: 150px; 
+    width: 150px; 
+    /* border: 2px solid black; */
+    display:flex; 
+    justify-content: center;
+    align-items: center;
+}
+.cell:nth-child(3n+2) {
+    border-left: 3px solid black;
+    border-right: 3px solid black;
+}
+.cell:nth-child(n+4):nth-child(-n+6){
+    border-top: 3px solid black;
+    border-bottom: 3px solid black;
 }
