@@ -2,11 +2,19 @@
 const textO= 'O';
 const textX = 'X';
 let currentPlayer = textX;
-// let computerPlayer = textO;
 let random;
-let spaces = ['','','','','','','','','']
+let spaces = [null, null, null, null, null, null, null, null, null]
 
-
+//Pop up window for name
+window.onload=function () {
+    let username = window.prompt('Enter your name');
+document.getElementById("playText").innerHTML = (username + " vs. Computer")
+    // if (username = 'null') {
+    //     document.getElementById("playText").innerHTML = ('You' + " vs. Computer")
+    // } else {
+    //     return;
+    // }
+}
 
 let restartButton = document.getElementById('restartButton')
 let cells = Array.from(document.getElementsByClassName('cell'))
@@ -17,8 +25,14 @@ function computerPlayer () {
 random = Math.floor(Math.random() * cells.length); 
 //Accessing random cells for computer player
 if (cells[random].innerText===''){ 
+    spaces[random] = currentPlayer
+console.log(spaces)
     cells[random].innerText = currentPlayer;
 //for every random cell that has an empty string, put value of currentPlayer
+if(checkForWin()){
+    playText.innerText= `${currentPlayer} WINS!`;
+        return;
+}
 switchPlayers();
 //recursion
 } else{ 
@@ -28,7 +42,7 @@ switchPlayers();
             counter++
         }
     }
-    if(counter) { 
+    if(counter) {  
         //if counter is true, (1 or greater) then we know we have empty spots on board and we re-run computerPlayer to try to find new number for empty cell
         computerPlayer() 
     }
@@ -36,7 +50,7 @@ switchPlayers();
 }
 function switchPlayers () {
     if (currentPlayer == textX){
-    currentPlayer == textO;
+    currentPlayer = textO;
     } else {
         currentPlayer=textX
     }
@@ -45,16 +59,18 @@ function switchPlayers () {
 
 
 //Click event for clicked cells
-for (let i= 0; i < cells.length; i++) {
-    console.log(cells[i])
-    cells[i].addEventListener('click', function(event){ //passing an event so has "event parameter"
+const board = document.getElementById('board')
+    board.addEventListener('click', function(event){ //passing an event so has "event parameter"
         if (!event.target.innerText){ //if the targeted event is falsy and has no text
-            console.log(event.target.innerText)
+            // console.log(event.target.innerText)
             event.target.innerText=currentPlayer
-            if(playerHasWon()) {
+            spaces[event.target.id] = currentPlayer
+            
+            if(checkForWin()) {
                 playText.innerText= `${currentPlayer} WINS!`;
                 return;
             }
+            
             if (currentPlayer == textX) { //alternating between players 
                 currentPlayer = textO
             } else {
@@ -64,8 +80,6 @@ for (let i= 0; i < cells.length; i++) {
         } computerPlayer();        
     })    
         
-}
-
 
 const winningCombos= [
     [0,1,2],
@@ -78,132 +92,45 @@ const winningCombos= [
     [2,4,6]
 ]
 
-
-
-function playerHasWon () {
-    let cell0 = document.getElementById("zero");
-    let cell1 = document.getElementById("one");
-    let cell2 = document.getElementById("two");
-    let cell3 = document.getElementById("three");
-    let cell4 = document.getElementById("four");
-    let cell5 = document.getElementById("five");
-    let cell6 = document.getElementById("six");
-    let cell7 = document.getElementById("seven");
-    let cell8 = document.getElementById("eight");
-        if (
-            cell0.innerText === currentPlayer &&
-            cell1.innerText === currentPlayer && 
-            cell2.innerText === currentPlayer
-        ){
-            console.log(`${currentPlayer} wins top horizontal`);
-            return true;
+//Winning function
+function checkForWin () {
+    for (let i =0; i<winningCombos.length; i++) {
+        let arr= winningCombos[i]
+        let boardIndexA = arr[0]
+        let boardIndexB = arr[1]
+        let boardIndexC = arr[2]
+        if (spaces[boardIndexA] !== null){
+            if(spaces[boardIndexA]===spaces[boardIndexB] && spaces[boardIndexA] === spaces[boardIndexC]){
+                
+                return true
+            }
         }
 
-        if (
-            cell3.innerText === currentPlayer &&
-            cell4.innerText === currentPlayer && 
-            cell5.innerText === currentPlayer
-        ){
-            console.log(`${currentPlayer} wins middle horizontal`)
-            return true;
+    }
+    checkDraw()
+    return false
+}
+//Draw function
+function checkDraw(){
+    for (let i = 0; i < spaces.length; i++) {
+        const element = spaces[i];
+        if(element === null){
+            return false
         }
-
-        if (
-            cell6.innerText === currentPlayer &&
-            cell7.innerText === currentPlayer && 
-            cell8.innerText === currentPlayer
-        ){
-            console.log(`${currentPlayer} wins bottom horizontal`)
-            return true;
-        }
-
-        if (
-            cell0.innerText === currentPlayer &&
-            cell3.innerText === currentPlayer && 
-            cell6.innerText === currentPlayer
-        ){
-            console.log(`${currentPlayer} wins left vertical`)
-            return true;
-        }
-
-        if (
-            cell1.innerText === currentPlayer &&
-            cell4.innerText === currentPlayer && 
-            cell7.innerText === currentPlayer
-        ){
-            console.log(`${currentPlayer} wins middle vertical`)
-            return true;
-        }
-
-        if (
-            cell2.innerText === currentPlayer &&
-            cell5.innerText === currentPlayer && 
-            cell8.innerText === currentPlayer
-        ){
-            console.log(`${currentPlayer} wins right vertical`)
-            return true;
-        }
-
-        if (
-            cell0.innerText === currentPlayer &&
-            cell4.innerText === currentPlayer && 
-            cell8.innerText === currentPlayer
-        ){
-            console.log(`${currentPlayer} wins left diagonal`)
-            return true;
-        }   
-
-        if (
-            cell2.innerText === currentPlayer &&
-            cell4.innerText === currentPlayer && 
-            cell6.innerText === currentPlayer
-        ){
-            console.log(`${currentPlayer} wins right diagonal`)
-            return true;
-
-        } else {
-            return false;
-        }
-        
+    }
+    playText.innerText = "It's a draw!"
 }
 
-// const tieGame = function() {
-//     let draw = 0;
-//     Array.from(spaces).forEach(function(space, index){
-//         if (spaces[i] !== null)
-//         draw++;
-//         if (draw === 9) {
-//             playerText.innerText = 'Draw';
-//         }
-//     })
-// }
-
-// function tieGame () {
-//     let draw = 0;
-//     Array.from(spaces).forEach(function(spaces,i){
-//         if (spaces[i] !== null)
-//             draw++;
-//         if (draw === 9) {
-//             playText.innerText = 'Draw';
-//         } else            
-//         )             
-// }
-    
 
 //Click event for restart button
-    restartButton.addEventListener('click', function () {
-        
-    
-    Array.from(spaces).forEach(function(space,index){  //forEach only works on arrays so use array.from
-        space[index] = null; //space has to be null because it's the actual space in JS
-        
-    })
-        Array.from(cells).forEach(function (cell) {
-            cell.innerText = ''; //this is cell because it's targeting the innerText of HTML
-    })
+restartButton.addEventListener('click', function () {
+    for (let i =0; i < spaces.length; i++) {
+        document.getElementById(`${i}`).innerHTML = ''
+        spaces[i] = null;
+    }
     playText.innerText = "Let's Play!"; 
     currentPlayer = textX;
-    })
+})
 
 
 
