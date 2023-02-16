@@ -14,18 +14,17 @@ let vsComputer = false;
 //   document.getElementById("playText").innerHTML = username + " vs. Computer";
 //   currentUsername = username;
 //   document.getElementById("playerOne").innerHTML = "playerOne" + username;
-  // if (username = 'null') {
-  //     document.getElementById("playText").innerHTML = ('You' + " vs. Computer")
-  // } else {
-  //     return;
-  // }
+// if (username = 'null') {
+//     document.getElementById("playText").innerHTML = ('You' + " vs. Computer")
+// } else {
+//     return;
+// }
 // };
 
-//vs button - toggles vs computer to be true 
-//have a form for names and display names- also two player 
-//add remove event listener -takes types and function- cant be inside of current event 
-//score counter 
-
+//vs button - toggles vs computer to be true
+//have a form for names and display names- also two player
+//add remove event listener -takes types and function- cant be inside of current event
+//score counter
 
 let restartButton = document.getElementById("restartButton");
 let cells = Array.from(document.getElementsByClassName("cell"));
@@ -79,21 +78,19 @@ board.addEventListener("click", function (event) {
 
     if (checkForWin()) {
       playText.innerText = `${currentPlayer} WINS!`;
-      
+
       return;
     }
     if (vsComputer) {
-        computerPlayer();
-
+      computerPlayer();
     } else {
-        if (currentPlayer == textX) {
-            //alternating between players
-            currentPlayer = textO;
-          } else {
-            currentPlayer = textX;
-          }
+      if (currentPlayer == textX) {
+        //alternating between players
+        currentPlayer = textO;
+      } else {
+        currentPlayer = textX;
+      }
     }
-    
   }
 });
 
@@ -109,6 +106,24 @@ const winningCombos = [
 ];
 
 //Winning function
+// function checkForWin() {
+//   for (let i = 0; i < winningCombos.length; i++) {
+//     let arr = winningCombos[i];
+//     let boardIndexA = arr[0];
+//     let boardIndexB = arr[1];
+//     let boardIndexC = arr[2];
+//     if (spaces[boardIndexA] !== null) {
+//       if (
+//         spaces[boardIndexA] === spaces[boardIndexB] &&
+//         spaces[boardIndexA] === spaces[boardIndexC]
+//       ) {
+//         return true;
+//       }
+//     }
+//   }
+//   checkDraw();
+//   return false;
+// }
 function checkForWin() {
   for (let i = 0; i < winningCombos.length; i++) {
     let arr = winningCombos[i];
@@ -120,44 +135,28 @@ function checkForWin() {
         spaces[boardIndexA] === spaces[boardIndexB] &&
         spaces[boardIndexA] === spaces[boardIndexC]
       ) {
-        board.addEventListener("click", function (event) {
-          //passing an event so has "event parameter"
-          if (!event.target.innerText) {
-            //if the targeted event is falsy and has no text
-            // console.log(event.target.innerText)
-            event.target.innerText = currentPlayer;
-            spaces[event.target.id] = currentPlayer;
-        
-            if (checkForWin()) {
-              playText.innerText = `${currentPlayer} WINS!`;
-              board.removeEventListener("click", arguments.callee);
-              return;
-            }
-            if (vsComputer) {
-                computerPlayer();
-                if (checkForWin()) {
-                  playText.innerText = `${currentPlayer} WINS!`;
-                  board.removeEventListener("click", arguments.callee);
-                  return;
-                }
-        
-            } else {
-                if (currentPlayer == textX) {
-                    //alternating between players
-                    currentPlayer = textO;
-                  } else {
-                    currentPlayer = textX;
-                  }
-            }
-            
-          }
-        });
+        board.removeEventListener("click", handleBoardClick); // remove event listener from the board
+        playText.innerText = `${currentPlayer} WINS!`;
         return true;
       }
     }
   }
-  checkDraw();
+  if (checkDraw()) {
+    board.removeEventListener("click", handleBoardClick); // remove event listener from the board
+    return true;
+  }
   return false;
+}
+
+function handleBoardClick(event) {
+  if (!event.target.innerText) {
+    event.target.innerText = currentPlayer;
+    spaces[event.target.id] = currentPlayer;
+    if (checkForWin()) {
+      return;
+    }
+    switchPlayers();
+  }
 }
 
 //Draw function
