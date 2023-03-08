@@ -105,25 +105,25 @@ const winningCombos = [
   [2, 4, 6],
 ];
 
-//Winning function
-// function checkForWin() {
-//   for (let i = 0; i < winningCombos.length; i++) {
-//     let arr = winningCombos[i];
-//     let boardIndexA = arr[0];
-//     let boardIndexB = arr[1];
-//     let boardIndexC = arr[2];
-//     if (spaces[boardIndexA] !== null) {
-//       if (
-//         spaces[boardIndexA] === spaces[boardIndexB] &&
-//         spaces[boardIndexA] === spaces[boardIndexC]
-//       ) {
-//         return true;
-//       }
-//     }
-//   }
-//   checkDraw();
-//   return false;
-// }
+// Winning function
+function checkForWin() {
+  for (let i = 0; i < winningCombos.length; i++) {
+    let arr = winningCombos[i];
+    let boardIndexA = arr[0];
+    let boardIndexB = arr[1];
+    let boardIndexC = arr[2];
+    if (spaces[boardIndexA] !== null) {
+      if (
+        spaces[boardIndexA] === spaces[boardIndexB] &&
+        spaces[boardIndexA] === spaces[boardIndexC]
+      ) {
+        return true;
+      }
+    }
+  }
+  checkDraw();
+  return false;
+}
 function checkForWin() {
   for (let i = 0; i < winningCombos.length; i++) {
     let arr = winningCombos[i];
